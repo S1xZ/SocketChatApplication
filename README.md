@@ -15,7 +15,7 @@
 // Receive
 {
     "type": "users",
-    "isExist": False,
+    "isExist": false,
     "data": {LIST_OF_USERS}
 }
 
@@ -26,7 +26,7 @@
 // Receive (id Username already exist)
 {
     "type": "users",
-    "isExist": True,
+    "isExist": true,
     "data": []
 }
 ```
