@@ -21,6 +21,7 @@ class ChatServer:
             client_thread = threading.Thread(
                 target=self.handle_client, args=(client_socket, ))
             client_thread.start()
+            print(f"Total Client: {threading.active_count() - 1}\n")
 
     def handle_client(self, socket):
         client_address = socket.getpeername()
@@ -33,7 +34,7 @@ class ChatServer:
                 break
 
             message = json.loads(message)
-
+            print(message)
             # The client can set a nickname.
             # Each client can see a list of all clients.
             if message["type"] == "username":
