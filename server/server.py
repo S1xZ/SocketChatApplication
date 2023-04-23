@@ -93,9 +93,9 @@ class ChatServer:
                 self.send_direct_message(recipient, nickname, message)
 
     def send_group_message(self, group_name, sender, sender_socket, message):
-        for socket in self.clients:
-            if self.clients[socket] in self.chat_groups[group_name] and socket != sender_socket:
-                socket.send(json.dumps({
+        for nickname in self.clients:
+            if nickname in self.chat_groups[group_name] and self.clients[nickname] != sender_socket:
+                self.clients[nickname].send(json.dumps({
                     "type": "group_message",
                     "group": group_name,
                     "sender": sender,
@@ -103,23 +103,23 @@ class ChatServer:
                 }).encode())
 
     def send_direct_message(self, recipient, sender, message):
-        for socket in self.clients:
-            if self.clients[socket] == recipient:
-                socket.send(json.dumps({
+        for nickname in self.clients:
+            if nickname == recipient:
+                self.clients[nickname].send(json.dumps({
                     "type": "direct_message",
                     "sender": sender,
                     "data": message
                 }).encode())
 
     def update_users(self):
-        for socket in self.clients:
+        for socket in self.clients.values():
             socket.send(json.dumps({
                 "type": "users",
-                "data": list(self.clients.values())
+                "data": list(self.clients.keys())
             }).encode())
 
     def update_groups(self, isExist=False, isJoin=False):
-        for socket in self.clients:
+        for socket in self.clients.values():
             socket.send(json.dumps({
                 "type": "groups",
                 "isExist": isExist,
