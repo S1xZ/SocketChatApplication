@@ -1,5 +1,3 @@
-
-
 # import all the required modules
 import socket
 import threading
@@ -29,29 +27,25 @@ class GUI:
         self.login = Toplevel()
         # set the title
         self.login.title("Login")
-        self.login.resizable(width=False,
-                             height=False)
-        self.login.configure(width=400,
-                             height=300)
+        self.login.resizable(width=False, height=False)
+        self.login.configure(width=400, height=300)
         # create a Label
         self.pls = Label(self.login,
                          text="Please login to continue",
                          justify=CENTER,
                          font="Helvetica 14 bold")
-
         self.pls.place(relheight=0.15, relx=0.2, rely=0.07)
+
         # create a Label
         self.labelName = Label(self.login,
                                text="Name: ",
                                font="Helvetica 12")
-
         self.labelName.place(relheight=0.2,
                              relx=0.1,
                              rely=0.2)
 
         # create a entry box for typing the message
         self.entryName = Entry(self.login, font="Helvetica 14")
-
         self.entryName.place(relwidth=0.4,
                              relheight=0.12,
                              relx=0.35,
@@ -66,15 +60,14 @@ class GUI:
                          text="CONTINUE",
                          font="Helvetica 14 bold",
                          command=lambda: self.goAhead(self.entryName.get()))
-
         self.go.place(relx=0.4,
                       rely=0.55)
+
         self.Window.mainloop()
 
     def goAhead(self, name):
         self.login.destroy()
         self.layout(name)
-
         # the thread to receive messages
         rcv = threading.Thread(target=self.receive)
         rcv.start()
@@ -178,24 +171,27 @@ class GUI:
 
     # function to receive messages
     def receive(self):
+        client.send(json.dumps({
+            "type": "username",
+            "data": self.name
+        }).encode())
         while True:
             try:
-                message = client.recv(1024).decode(FORMAT)
-
-                # if the messages from the server is NAME send the client's name
-                if message == 'NAME':
-                    client.send(self.name.encode(FORMAT))
-                else:
+                responseJSON = client.recv(1024).decode()
+                print(f'Received from server: {responseJSON}')
+                responseObject = json.loads(responseJSON)
+                print(f'Object from server: {responseObject}')
+                if (responseObject["type"] == "direct_message"):
+                    print(f'Received from server: {responseObject}')
                     # insert messages to text box
                     self.textCons.config(state=NORMAL)
-                    self.textCons.insert(END,
-                                         message+"\n\n")
+                    self.textCons.insert(END, responseObject["data"]+"\n\n")
 
                     self.textCons.config(state=DISABLED)
                     self.textCons.see(END)
             except:
                 # an error will be printed on the command line or console if there's an error
-                print("An error occured!")
+                print("An error occurred")
                 client.close()
                 break
 
@@ -203,16 +199,14 @@ class GUI:
     def sendMessage(self):
         self.textCons.config(state=DISABLED)
         while True:
-            message = (f"{self.name}: {self.msg}")
-            client.send(message.encode(FORMAT))
+            message = json.dumps({
+                "type": "direct_message",
+                "recipient": "test",
+                "data": self.msg
+            })
+            client.send(message.encode())
             break
 
 
 # create a GUI class object
-# g = GUI()
-
-
-client.send(json.dumps({
-    "type": "username",
-    "data": "nick"
-}).encode())
+g = GUI()
