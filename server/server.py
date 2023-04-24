@@ -115,7 +115,8 @@ class ChatServer:
         for socket in self.clients.values():
             socket.send(json.dumps({
                 "type": "users",
-                "data": list(self.clients.keys())
+                "data": list(self.clients.keys()),
+                "group_data": list(self.chat_groups.keys())
             }).encode())
 
     def update_groups(self, isExist=False, isJoin=False):
