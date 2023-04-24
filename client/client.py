@@ -238,7 +238,6 @@ class GUI:
         while self.isStart:
             try:
                 responseJSON = client.recv(1024).decode()
-                print(f'Object from server: {responseJSON}')
                 self.on_receive(json.loads(responseJSON))
 
             except Exception as e:
