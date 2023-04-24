@@ -29,10 +29,6 @@ class GUI:
         # Create Login Window
         self.create_login_window()
 
-        # on closing the window
-        self.login.protocol("WM_DELETE_WINDOW", self.on_login_window_close)
-        self.root.protocol("WM_DELETE_WINDOW", self.on_root_window_close)
-
         # start receive thread message
         self.receive_thread = threading.Thread(target=self.receive)
         self.receive_thread.start()
@@ -63,28 +59,30 @@ class GUI:
                                   rely=0.2)
 
         # create a entry box for typing the message
-        self.ent_username = Entry(self.login, font="Helvetica 14")
-        self.ent_username.place(relwidth=0.4,
-                                relheight=0.12,
-                                relx=0.35,
-                                rely=0.2)
+        self.ent_login_username = Entry(self.login, font="Helvetica 14")
+        self.ent_login_username.place(relwidth=0.4,
+                                      relheight=0.12,
+                                      relx=0.35,
+                                      rely=0.2)
 
         # set the focus to entry login
-        self.ent_username.focus()
+        self.ent_login_username.focus()
 
         # for error message
-        self.lbl_error = Label(self.login,
-                               text="Error: Name already exist!",
-                               justify=CENTER,
-                               fg="red",
-                               font="Helvetica 8 bold")
+        self.lbl_login_error = Label(self.login,
+                                     text="",
+                                     justify=CENTER,
+                                     fg="red",
+                                     font="Helvetica 8 bold")
         # create a Continue Button
-        self.btn_summit_username = Button(self.login,
-                                          text="CONTINUE",
-                                          font="Helvetica 14 bold",
-                                          command=lambda: self.on_click("sending", type="username", data=self.ent_username.get()))
-        self.btn_summit_username.place(relx=0.4,
-                                       rely=0.55)
+        self.btn_login_summit_username = Button(self.login,
+                                                text="CONTINUE",
+                                                font="Helvetica 14 bold",
+                                                command=lambda: self.on_click("sending", type="username", data=self.ent_login_username.get()))
+        self.btn_login_summit_username.place(relx=0.4,
+                                             rely=0.55)
+
+        self.login.protocol("WM_DELETE_WINDOW", self.on_login_window_close)
 
     def create_root_window(self):
 
@@ -97,74 +95,69 @@ class GUI:
         self.root.configure(bg="#17202A")
 
         # create a Label
-        self.lbl_head = Label(self.root,
-                              bg="#ffe291",
-                              fg="#000000",
-                              text=self.username,
-                              font="Helvetica 13 bold",
-                              pady=5)
-        self.lbl_head.place(relwidth=1)
-
-        # create a Label
-        self.lbl_line = Label(self.root,
-                              width=450,
-                              bg="#ABB2B9")
-        self.lbl_line.place(relwidth=1,
-                            rely=0.07,
-                            relheight=0.012)
+        self.lbl_root_head = Label(self.root,
+                                   bg="#ffe291",
+                                   fg="#000000",
+                                   text="Username : "+self.username,
+                                   font="Helvetica 13 bold",
+                                   pady=5,)
+        self.lbl_root_head.place(relwidth=1)
 
         # create a text box
-        self.txt_message = Text(self.root,
-                                width=20,
-                                height=2,
-                                bg="#ffcac4",
-                                fg="#000000",
-                                font="Helvetica 14",
-                                padx=5,
-                                pady=5)
-        self.txt_message.place(relheight=0.745,
-                               relwidth=1,
-                               rely=0.08)
-        self.txt_message.config(cursor="arrow")
-
-        # create a Label
-        self.lbl_bottom = Label(self.root,
-                                bg="#ABB2B9",
-                                height=80)
-        self.lbl_bottom.place(relwidth=1,
-                              rely=0.825)
-
-        # create a entry box for typing the message
-        self.ent_message = Entry(self.lbl_bottom,
-                                 bg="#2C3E50",
-                                 fg="#EAECEE",
-                                 font="Helvetica 13")
-        self.ent_message.place(relwidth=0.74,
-                               relheight=0.06,
-                               rely=0.008,
-                               relx=0.011)
-        self.ent_message.focus()
-
-        # create a Send Button
-        self.btn_message = Button(self.lbl_bottom,
-                                  text="Send",
-                                  font="Helvetica 10 bold",
-                                  width=20,
-                                  bg="#ABB2B9",
-                                  command=lambda: self.on_click("sending", type="direct_message", data=self.ent_message.get()))
-        self.btn_message.place(relx=0.77,
-                               rely=0.008,
-                               relheight=0.06,
-                               relwidth=0.22)
+        self.txt_root_message = Text(self.root,
+                                     height=2,
+                                     width=20,
+                                     bg="#ffcac4",
+                                     fg="#000000",
+                                     font="Helvetica 14",
+                                     padx=5,
+                                     pady=5,
+                                     cursor="arrow",
+                                     state=DISABLED)
+        self.txt_root_message.place(relheight=0.757,
+                                    relwidth=1,
+                                    rely=0.08)
 
         # create a scroll bar
-        scrollbar = Scrollbar(self.txt_message)
+        scrollbar = Scrollbar(self.txt_root_message,
+                              command=self.txt_root_message.yview)
         scrollbar.place(relheight=1,
                         relx=0.974)
-        scrollbar.config(command=self.txt_message.yview)
+
+        # create a Label
+        self.lbl_root_bottom = Label(self.root,
+                                     bg="#ABB2B9",
+                                     height=80
+                                     )
+        self.lbl_root_bottom.place(relwidth=1, rely=0.825)
+
+        # create a entry box for typing the message
+        self.ent_root_message = Entry(self.lbl_root_bottom,
+                                      bg="#2C3E50",
+                                      fg="#EAECEE",
+                                      font="Helvetica 13")
+        self.ent_root_message.place(relwidth=0.74,
+                                    relheight=0.06,
+                                    rely=0.008,
+                                    relx=0.011)
+        self.ent_root_message.focus()
+
+        # create a Send Button
+        self.btn_root_message = Button(self.lbl_root_bottom,
+                                       text="Send",
+                                       font="Helvetica 10 bold",
+                                       width=20,
+                                       bg="#ABB2B9",
+                                       command=lambda: self.on_click("sending", type="direct_message", data=self.ent_root_message.get()))
+        self.btn_root_message.place(relx=0.77,
+                                    rely=0.008,
+                                    relheight=0.06,
+                                    relwidth=0.22)
 
         # function to start the thread for sending messages
-        self.txt_message.config(state=DISABLED)
+        self.txt_root_message.config(state=DISABLED)
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_root_window_close)
 
     # Handle On Window Close
     def on_login_window_close(self):
@@ -181,14 +174,24 @@ class GUI:
             client.close()
 
     # Main method
-    def on_click(self, action, type=None, data=None):
+    def on_click(self, action, type=None, data=None, group_name="test", recipient="test"):
         if action == "sending":
             if type == 'username':
                 self.handle_send_update_username(data)
 
             elif type == "direct_message":
-                self.handle_send_direct_message(data)
+                self.handle_send_direct_message(recipient, data)
 
+            elif type == "create":
+                self.handle_send_create_group(data)
+
+            elif type == "join":
+                self.handle_send_join_group(data)
+
+            elif type == "group_message":
+                self.handle_send_group_message(group_name, data)
+
+    # handle send message to server
     def handle_send_update_username(self, username):
         self.username = username
         message = json.dumps({
@@ -197,27 +200,59 @@ class GUI:
         })
         client.send(message.encode())
 
-    def handle_send_direct_message(self, message):
-        self.txt_message.config(state=DISABLED)
-        self.ent_message.delete(0, END)
-        self.txt_message.config(state=DISABLED)
+    def handle_send_direct_message(self, recipient, message):
+        self.ent_root_message.delete(0, END)
         message = json.dumps({
             "type": "direct_message",
-            "recipient": "test",
+            "recipient": recipient,
+            "data": message
+        })
+        client.send(message.encode())
+
+    def handle_send_create_group(self, group_name):
+        # Fill
+
+        # Here
+        message = json.dumps({
+            "type": "create",
+            "data": group_name
+        })
+        client.send(message.encode())
+
+    def handle_send_join_group(self, group_name):
+        # Fill
+
+        # Here
+        message = json.dumps({
+            "type": "join",
+            "data": group_name
+        })
+        client.send(message.encode())
+
+    def handle_send_group_message(self, group_name, message):
+        # Fill
+
+        # Here
+        message = json.dumps({
+            "type": "group_message",
+            "group": group_name,
             "data": message
         })
         client.send(message.encode())
 
     def on_receive(self, response_object):
         print(f'Object from server: {response_object}')
-        if (response_object["type"] == "users" or response_object["type"] == "username"):
+        respond_type = response_object["type"]
+        if (respond_type == "users" or respond_type == "username"):
             self.handle_receive_update_username(response_object)
-        elif response_object["type"] == "direct_message":
+        elif respond_type == "direct_message":
             self.handle_receive_direct_message(response_object)
 
+    # handle receive message from server
     def handle_receive_update_username(self, response_object):
         if (response_object["type"] == "username"):
-            self.lbl_error.place(
+            self.lbl_login_error.config(text="Error: Name already exist!")
+            self.lbl_login_error.place(
                 relx=0.35,
                 rely=0.33)
             return
@@ -226,12 +261,12 @@ class GUI:
 
     def handle_receive_direct_message(self, response_object):
         # insert messages to text box
-        self.txt_message.config(state=NORMAL)
-        self.txt_message.insert(
+        self.txt_root_message.config(state=NORMAL)
+        self.txt_root_message.insert(
             END, response_object["sender"]+" : "+response_object["data"]+"\n\n")
 
-        self.txt_message.config(state=DISABLED)
-        self.txt_message.see(END)
+        self.txt_root_message.config(state=DISABLED)
+        self.txt_root_message.see(END)
 
     # thread function
     def receive(self):

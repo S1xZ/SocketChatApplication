@@ -2,18 +2,19 @@
 
 - [x] The client can set a nickname.
 
-- [ ] Each client can see a list of all clients.
+- [x] Each client can see a list of all clients.
 
 ```json
 // Send Create username
 {
-    "type":"username"
+    "type":"username",
     "data": {USERNAME}
 }
 // Receive (id Username not exist)
 {
     "type": "users",
-    "data": {LIST_OF_USERS}
+    "data": {LIST_OF_USERS},
+    "group_data": {LIST_OF_GROUPS}
 }
 // Receive (id Username already exist)
 {
@@ -26,7 +27,7 @@
 
 - [x] Each client can create a chat group(s)
 
-- [ ] Each client can see a list of all created chat groups
+- [x] Each client can see a list of all created chat groups
 
 ```json
 // Send to backend
@@ -47,7 +48,7 @@
 
 - [x] Each client can join a chat group(s)
 
-- [ ] Each client can see a list of all created chat groups
+- [x] Each client can see a list of all created chat groups
 
 ```json
 // Send to backend
@@ -109,7 +110,7 @@
       one for the server and client and others for the client
 - [ ] The chat room must have a chat box and a chat window.
 
-- [ ] In a group chat room, each client must see all the text messages from other clients
+- [x] In a group chat room, each client must see all the text messages from other clients
       in that chat group
 
 ---
