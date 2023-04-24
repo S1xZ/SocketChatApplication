@@ -19,157 +19,160 @@ class GUI:
     # constructor method
     def __init__(self):
 
-        # chat window which is currently hidden
-        self.Window = Tk()
-        self.Window.withdraw()
+        # Make root Window
+        self.root = Tk()
+        self.root.withdraw()
 
         # login window
         self.login = Toplevel()
-        # set the title
-        self.login.title("Login")
+        self.login.title("Chat App")
         self.login.resizable(width=False, height=False)
         self.login.configure(width=400, height=300)
-        # create a Label
-        self.pls = Label(self.login,
-                         text="Please login to continue",
-                         justify=CENTER,
-                         font="Helvetica 14 bold")
-        self.pls.place(relheight=0.15, relx=0.2, rely=0.07)
 
         # create a Label
-        self.labelName = Label(self.login,
-                               text="Name: ",
-                               font="Helvetica 12")
-        self.labelName.place(relheight=0.2,
-                             relx=0.1,
-                             rely=0.2)
+        self.lbl_login = Label(self.login,
+                               text="Please login to continue",
+                               justify=CENTER,
+                               font="Helvetica 14 bold")
+        self.lbl_login.place(relheight=0.15, relx=0.2, rely=0.07)
+
+        # create a Label
+        self.lbl_login_name = Label(self.login,
+                                    text="Name: ",
+                                    font="Helvetica 12")
+        self.lbl_login_name.place(relheight=0.2,
+                                  relx=0.1,
+                                  rely=0.2)
 
         # create a entry box for typing the message
-        self.entryName = Entry(self.login, font="Helvetica 14")
-        self.entryName.place(relwidth=0.4,
-                             relheight=0.12,
-                             relx=0.35,
-                             rely=0.2)
+        self.ent_username = Entry(self.login, font="Helvetica 14")
+        self.ent_username.place(relwidth=0.4,
+                                relheight=0.12,
+                                relx=0.35,
+                                rely=0.2)
 
-        # set the focus of the cursor
-        self.entryName.focus()
+        # set the focus to entry login
+        self.ent_username.focus()
 
         # create a Continue Button
-        # along with action
-        self.go = Button(self.login,
-                         text="CONTINUE",
-                         font="Helvetica 14 bold",
-                         command=lambda: self.goAhead(self.entryName.get()))
-        self.go.place(relx=0.4,
-                      rely=0.55)
+        self.btn_summit_username = Button(self.login,
+                                          text="CONTINUE",
+                                          font="Helvetica 14 bold",
+                                          command=lambda: self.setUserName(self.ent_username.get()))
+        self.btn_summit_username.place(relx=0.4,
+                                       rely=0.55)
 
-        self.Window.mainloop()
+        # bind a key to call the same
+        self.root.mainloop()
 
-    def goAhead(self, name):
+    def setUserName(self, username):
+        # Destroy login window
         self.login.destroy()
-        self.layout(name)
+        self.layout(username)
+
         # the thread to receive messages
-        rcv = threading.Thread(target=self.receive)
-        rcv.start()
+        receive_thread = threading.Thread(target=self.receive)
+        receive_thread.start()
 
     # The main layout of the chat
     def layout(self, name):
-
+        # set username
         self.name = name
+
         # to show chat window
-        self.Window.deiconify()
-        self.Window.title("CHATROOM")
-        self.Window.resizable(width=False,
-                              height=False)
-        self.Window.configure(width=470,
-                              height=550,
-                              bg="#17202A")
-        self.labelHead = Label(self.Window,
-                               bg="#ffe291",
-                               fg="#000000",
-                               text=self.name,
-                               font="Helvetica 13 bold",
-                               pady=5)
+        self.root.deiconify()
+        self.root.title("CHATROOM")
+        self.root.resizable(width=False,
+                            height=False)
+        self.root.configure(width=470,
+                            height=550,
+                            bg="#17202A")
 
-        self.labelHead.place(relwidth=1)
-        self.line = Label(self.Window,
-                          width=450,
-                          bg="#ABB2B9")
+        # create a Label
+        self.lbl_head = Label(self.root,
+                              bg="#ffe291",
+                              fg="#000000",
+                              text=self.name,
+                              font="Helvetica 13 bold",
+                              pady=5)
 
-        self.line.place(relwidth=1,
-                        rely=0.07,
-                        relheight=0.012)
+        self.lbl_head.place(relwidth=1)
 
-        self.textCons = Text(self.Window,
-                             width=20,
-                             height=2,
-                             bg="#ffcac4",
-                             fg="#000000",
-                             font="Helvetica 14",
-                             padx=5,
-                             pady=5)
+        # create a Label
+        self.lbl_line = Label(self.root,
+                              width=450,
+                              bg="#ABB2B9")
 
-        self.textCons.place(relheight=0.745,
-                            relwidth=1,
-                            rely=0.08)
+        self.lbl_line.place(relwidth=1,
+                            rely=0.07,
+                            relheight=0.012)
 
-        self.labelBottom = Label(self.Window,
-                                 bg="#ABB2B9",
-                                 height=80)
+        # create a text box
+        self.txt_message = Text(self.root,
+                                width=20,
+                                height=2,
+                                bg="#ffcac4",
+                                fg="#000000",
+                                font="Helvetica 14",
+                                padx=5,
+                                pady=5)
 
-        self.labelBottom.place(relwidth=1,
-                               rely=0.825)
+        self.txt_message.place(relheight=0.745,
+                               relwidth=1,
+                               rely=0.08)
+        self.txt_message.config(cursor="arrow")
 
-        self.entryMsg = Entry(self.labelBottom,
-                              bg="#2C3E50",
-                              fg="#EAECEE",
-                              font="Helvetica 13")
+        # create a Label
+        self.lbl_bottom = Label(self.root,
+                                bg="#ABB2B9",
+                                height=80)
 
-        # place the given widget
-        # into the gui window
-        self.entryMsg.place(relwidth=0.74,
-                            relheight=0.06,
-                            rely=0.008,
-                            relx=0.011)
+        self.lbl_bottom.place(relwidth=1,
+                              rely=0.825)
 
-        self.entryMsg.focus()
+        # create a entry box for typing the message
+        self.ent_message = Entry(self.lbl_bottom,
+                                 bg="#2C3E50",
+                                 fg="#EAECEE",
+                                 font="Helvetica 13")
+        self.ent_message.place(relwidth=0.74,
+                               relheight=0.06,
+                               rely=0.008,
+                               relx=0.011)
+
+        # set the focus to entry
+        self.ent_message.focus()
 
         # create a Send Button
-        self.buttonMsg = Button(self.labelBottom,
-                                text="Send",
-                                font="Helvetica 10 bold",
-                                width=20,
-                                bg="#ABB2B9",
-                                command=lambda: self.sendButton(self.entryMsg.get()))
-
-        self.buttonMsg.place(relx=0.77,
-                             rely=0.008,
-                             relheight=0.06,
-                             relwidth=0.22)
-
-        self.textCons.config(cursor="arrow")
+        self.btn_message = Button(self.lbl_bottom,
+                                  text="Send",
+                                  font="Helvetica 10 bold",
+                                  width=20,
+                                  bg="#ABB2B9",
+                                  command=lambda: self.handleSend(self.ent_message.get()))
+        self.btn_message.place(relx=0.77,
+                               rely=0.008,
+                               relheight=0.06,
+                               relwidth=0.22)
 
         # create a scroll bar
-        scrollbar = Scrollbar(self.textCons)
-
-        # place the scroll bar
-        # into the gui window
+        scrollbar = Scrollbar(self.txt_message)
         scrollbar.place(relheight=1,
                         relx=0.974)
+        scrollbar.config(command=self.txt_message.yview)
 
-        scrollbar.config(command=self.textCons.yview)
+        # function to start the thread for sending messages
+        self.txt_message.config(state=DISABLED)
 
-        self.textCons.config(state=DISABLED)
-
-    # function to basically start the thread for sending messages
-    def sendButton(self, msg):
-        self.textCons.config(state=DISABLED)
+    # function to start the thread for sending messages
+    def handleSend(self, msg):
+        self.txt_message.config(state=DISABLED)
         self.msg = msg
-        self.entryMsg.delete(0, END)
-        snd = threading.Thread(target=self.sendMessage)
-        snd.start()
+        self.ent_message.delete(0, END)
+        send_thread = threading.Thread(target=self.send)
+        send_thread.start()
 
-    # function to receive messages
+    # function to receive server's messages
     def receive(self):
         client.send(json.dumps({
             "type": "username",
@@ -184,20 +187,21 @@ class GUI:
                 if (responseObject["type"] == "direct_message"):
                     print(f'Received from server: {responseObject}')
                     # insert messages to text box
-                    self.textCons.config(state=NORMAL)
-                    self.textCons.insert(END, responseObject["data"]+"\n\n")
+                    self.txt_message.config(state=NORMAL)
+                    self.txt_message.insert(
+                        END, responseObject["sender"]+" : "+responseObject["data"]+"\n\n")
 
-                    self.textCons.config(state=DISABLED)
-                    self.textCons.see(END)
+                    self.txt_message.config(state=DISABLED)
+                    self.txt_message.see(END)
             except:
                 # an error will be printed on the command line or console if there's an error
                 print("An error occurred")
                 client.close()
                 break
 
-    # function to send messages
-    def sendMessage(self):
-        self.textCons.config(state=DISABLED)
+    # function to send server's messages
+    def send(self):
+        self.txt_message.config(state=DISABLED)
         while True:
             message = json.dumps({
                 "type": "direct_message",
