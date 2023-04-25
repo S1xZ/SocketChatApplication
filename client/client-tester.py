@@ -1,35 +1,42 @@
 import socket
 import select
 import json
+import threading
 # Set up the socket object
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+client_socket = socket.socket()
 
 # Connect to the server
 # Change to your server's address and port
 server_address = ('localhost', 8000)
 client_socket.connect(server_address)
+client_socket.setblocking(0)
 
-while True:
-    # Prompt the user to input a message
-    message = input('Enter a message to send to the server: ')
 
-    # Send the message to the server
-    client_socket.sendall(message.encode())
+def receive():
+    while True:
+        try:
+            message = client_socket.recv(1024)
+            if not message:
+                continue
+            print(message)
+            # if the messages from the server is NAME send the client's name
 
-    # Set response timeout
-    client_socket.settimeout(3)
+        except socket.error:
+            # an error will be printed on the command line or console if there's an error
+            print(socket.error)
+            break
 
-    # Receive the response from the server
-    try:
-        response = client_socket.recv(1024).decode()
-        # Print out the response
-        print(f'Received from server: {response}')
-    except socket.timeout:
-        print('The server did not respond in time')
 
-    # Check if the user wants to exit
-    if message.lower() == 'exit':
+def send():
+    while True:
+        message = input('Enter a message to send to the server: ')
+        client_socket.send(message.encode())
         break
 
-# Close the socket
-client_socket.close()
+
+rcv = threading.Thread(target=receive())
+snd = threading.Thread(target=send())
+rcv.start()
+snd.start()

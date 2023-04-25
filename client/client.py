@@ -76,6 +76,10 @@ class GUI:
         self.layout(name)
 
         # the thread to receive messages
+        client.send(json.dumps({
+            "type": "username",
+            "data": name,
+        }).encode())
         rcv = threading.Thread(target=self.receive)
         rcv.start()
 
@@ -183,16 +187,11 @@ class GUI:
                 message = client.recv(1024).decode(FORMAT)
 
                 # if the messages from the server is NAME send the client's name
-                if message == 'NAME':
-                    client.send(self.name.encode(FORMAT))
+                if not message:
+                    continue
                 else:
-                    # insert messages to text box
-                    self.textCons.config(state=NORMAL)
-                    self.textCons.insert(END,
-                                         message+"\n\n")
-
-                    self.textCons.config(state=DISABLED)
-                    self.textCons.see(END)
+                    commands = json.loads(message)
+                    print(commands)
             except:
                 # an error will be printed on the command line or console if there's an error
                 print("An error occured!")
@@ -209,10 +208,10 @@ class GUI:
 
 
 # create a GUI class object
-# g = GUI()
+g = GUI()
 
 
-client.send(json.dumps({
-    "type": "username",
-    "data": "nick"
-}).encode())
+# client.send(json.dumps({
+#     "type": "username",
+#     "data": "nick"
+# }).encode())
