@@ -291,8 +291,9 @@ class GUI:
                     text="Chat room with "+self.current_client_chat)
             elif type == 'backtohome':
                 self.root.withdraw()
+                self.txt_root_message.delete(END)
                 self.client_chats[self.current_client_chat] = self.txt_root_message.get(
-                    "1.0", END)
+                    "1.0", 'end-1c')
                 self.current_client_chat = None
                 self.home.deiconify()
                 # Stored Old Chat
