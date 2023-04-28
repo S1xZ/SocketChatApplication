@@ -1,41 +1,33 @@
 # Message format Chat App 👩‍💻
 
-- [ ] The client can set a nickname.
+- [x] The client can set a nickname.
 
-- [ ] Each client can see a list of all clients.
-
-- [ ] Each client can see a list of all created chat groups
+- [x] Each client can see a list of all clients.
 
 ```json
-// Send to backend
+// Send Create username
 {
-    "type":"username"
+    "type":"username",
     "data": {USERNAME}
 }
-// Receive
+// Receive (id Username not exist)
 {
     "type": "users",
-    "isExist": false,
-    "data": {LIST_OF_USERS}
-}
-
-{
-    "type": "groups",
-    "data": {LIST_OF_GROUPS}
+    "data": {LIST_OF_USERS},
+    "group_data": {LIST_OF_GROUPS}
 }
 // Receive (id Username already exist)
 {
     "type": "users",
-    "isExist": true,
-    "data": []
+    "isExist": true
 }
 ```
 
 ---
 
-- [ ] Each client can create a chat group(s)
+- [x] Each client can create a chat group(s)
 
-- [ ] Each client can see a list of all created chat groups
+- [x] Each client can see a list of all created chat groups
 
 ```json
 // Send to backend
@@ -54,9 +46,9 @@
 
 ---
 
-- [ ] Each client can join a chat group(s)
+- [x] Each client can join a chat group(s)
 
-- [ ] Each client can see a list of all created chat groups
+- [x] Each client can see a list of all created chat groups
 
 ```json
 // Send to backend
@@ -75,7 +67,7 @@
 
 ---
 
-- [ ] Each client can send a group message.
+- [x] Each client can send a group message.
 
 ```json
 // Send to backend
@@ -84,7 +76,7 @@
 "group": {GROUP_NAME},
 "data": {MESSAGE}
 }
-// Receive (For user in group minus sender only)
+// Receive (For user in group exclude sender)
 {
 "type": "group_message",
 "group": {GROUP_NAME},
@@ -93,13 +85,39 @@
 }
 ```
 
-- [ ] Each client can send a direct message to other clients in the list.
+---
+
+- [x] Each client can send a direct message to other clients in the list.
 
 ```json
-// Send to backend
+// Send Message to server
 {
 "type": "direct_message",
 "recipient": {RECIPENT_NAME},
 "data": {MESSAGE}
 }
+// Receive (For username in recipient)
+{
+"type": "direct_message",
+"sender": {RECIPENT_NAME},
+"data": {MESSAGE}
+}
 ```
+
+---
+
+- [x] The system must have at least 2 computers for implementing the chat application,
+      one for the server and client and others for the client
+- [x] The chat room must have a chat box and a chat window.
+
+- [x] In a group chat room, each client must see all the text messages from other clients
+      in that chat group
+
+---
+
+## More Functional Requirements (1.0 points per feature)
+
+1. The
+2. The
+3. The
+4. The
