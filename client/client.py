@@ -293,6 +293,7 @@ class GUI:
                 self.root.withdraw()
                 self.client_chats[self.current_client_chat] = self.txt_root_message.get(
                     "1.0", END)
+                self.current_client_chat = None
                 self.home.deiconify()
                 # Stored Old Chat
         elif action == "sending":
@@ -409,12 +410,13 @@ class GUI:
         else:
             message = now+" "+sender+" : "+message+"\n\n"
         # Insert Message to current text box
-        if (sender == self.current_client_chat):
+        if (sender == self.current_client_chat) or me:
             self.txt_root_message.config(state=NORMAL)
             self.txt_root_message.insert(END, message)
             self.txt_root_message.config(state=DISABLED)
             self.txt_root_message.see(END)
             return
+        # Insert Message to stored chat
         self.client_chats[sender] = self.client_chats[sender] + message
 
     # Change Text Box
