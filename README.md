@@ -25,7 +25,7 @@
 
 ---
 
-- [x] Each client can create a chat group(s)
+- [ ] Each client can create a chat group(s)
 
 - [x] Each client can see a list of all created chat groups
 
@@ -46,7 +46,7 @@
 
 ---
 
-- [x] Each client can join a chat group(s)
+- [ ] Each client can join a chat group(s)
 
 - [x] Each client can see a list of all created chat groups
 
@@ -67,7 +67,7 @@
 
 ---
 
-- [x] Each client can send a group message.
+- [ ] Each client can send a group message.
 
 ```json
 // Send to backend
@@ -108,7 +108,7 @@
 
 - [x] The system must have at least 2 computers for implementing the chat application,
       one for the server and client and others for the client
-- [ ] The chat room must have a chat box and a chat window.
+- [x] The chat room must have a chat box and a chat window.
 
 - [x] In a group chat room, each client must see all the text messages from other clients
       in that chat group
