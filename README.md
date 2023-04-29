@@ -25,7 +25,7 @@
 
 ---
 
-- [ ] Each client can create a chat group(s)
+- [x] Each client can create a chat group(s)
 
 - [x] Each client can see a list of all created chat groups
 
@@ -46,7 +46,7 @@
 
 ---
 
-- [ ] Each client can join a chat group(s)
+- [x] Each client can join a chat group(s)
 
 - [x] Each client can see a list of all created chat groups
 
@@ -67,7 +67,7 @@
 
 ---
 
-- [ ] Each client can send a group message.
+- [x] Each client can send a group message.
 
 ```json
 // Send to backend
