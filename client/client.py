@@ -282,10 +282,8 @@ class GUI:
             elif type == 'openchat':
                 if self.is_group:
                     self.current_group_chat = self.combobox_home_group.get()
-                    print(self.combobox_home_group.get(), "what group")
                 else:
                     self.current_client_chat = self.combobox_home_client.get()
-                    print(self.combobox_home_client.get(), "what client")
                 self.handle_open_chat(self.is_group)
             elif type == 'backtohome':
                 self.handle_back_to_home(self.is_group)
@@ -328,7 +326,7 @@ class GUI:
         self.root.withdraw()
         self.txt_root_message.delete(END)
         if is_group:
-            self.client_chats[self.current_group_chat] = self.txt_root_message.get(
+            self.join_group_chats[self.current_group_chat] = self.txt_root_message.get(
                 "1.0", 'end-1c')
             self.current_group_chat = None
         else:
@@ -421,8 +419,9 @@ class GUI:
             response_object["sender"], response_object["data"])
 
     def handle_receive_group_message(self, response_object):
+        print("Received group message", response_object)
         self.insert_message(
-            response_object["sender"], response_object["data"])
+            response_object["sender"], response_object["data"], group_name=response_object["group"], is_group=True)
 
     def handle_receive_groups(self, response_object):
         if response_object["isExist"] and not response_object["isJoin"]:
@@ -439,13 +438,23 @@ class GUI:
 
     # Add message to text box
 
-    def insert_message(self, sender, message, me=False):
+    def insert_message(self, sender, message, me=False, group_name="None", is_group=False):
         now = datetime.now().strftime("%H:%M:%S")
         # Create Message depends on is that myself
         if (me):
             message = now+" "+sender+"(me) : "+message+"\n\n"
         else:
             message = now+" "+sender+" : "+message+"\n\n"
+
+        if is_group:
+            if (group_name == self.current_group_chat) or me:
+                self.txt_root_message.config(state=NORMAL)
+                self.txt_root_message.insert(END, message)
+                self.txt_root_message.config(state=DISABLED)
+                self.txt_root_message.see(END)
+                return
+            self.join_group_chats[group_name] = self.join_group_chats[group_name] + message
+            return
         # Insert Message to current text box
         if (sender == self.current_client_chat) or me:
             self.txt_root_message.config(state=NORMAL)
@@ -491,7 +500,7 @@ class GUI:
 
             except Exception as e:
                 # an error will be printed on the command line or console if there's an error
-                print(e)
+                print("Error has occured", e)
                 break
 
     # End Class
