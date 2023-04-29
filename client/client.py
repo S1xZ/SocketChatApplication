@@ -8,7 +8,7 @@ from tkinter import font
 from tkinter import ttk
 from tkinter import messagebox
 
-SERVER = 'localhost'
+SERVER = '26.122.204.60'
 PORT = 8000
 FORMAT = "utf-8"
 ADDRESS = (SERVER, PORT)
@@ -368,6 +368,7 @@ class GUI:
         client.send(message.encode())
 
     def handle_send_group_message(self, group_name, message):
+        self.ent_root_message.delete(0, END)
         send_message = json.dumps({
             "type": "group_message",
             "group": group_name,
